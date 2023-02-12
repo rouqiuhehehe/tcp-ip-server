@@ -19,6 +19,7 @@ int main (int argc, char **argv)
     struct sockaddr_in server_address {};
     char message[30];
     int str_len;
+    int message_len = 0;
 
     if (argc != 3)
         failExit(std::string("Usage : ") + argv[0] + "<IP> <port>");
@@ -37,9 +38,13 @@ int main (int argc, char **argv)
         sizeof(server_address)) == -1)
         failExit("connect fail");
 
-    str_len = (int)read(server_socket, message, sizeof(message) - 1);
+    // while ((str_len = (int)read(server_socket, &message[message_len++], 1)))
+    sleep(1);
+
+    str_len = (int)read(server_socket, message, sizeof(message));
     if (str_len == -1)
         failExit("read error");
+
     std::cout << "接收到服务端的信息：" << message;
     close(server_socket);
 

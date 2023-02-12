@@ -4,14 +4,14 @@
 #include "util.h"
 #include <fstream>
 #include <cstring>
-#include <fcntl.h>
-#include <unistd.h>
 
 void createFile ();
 void readFile ();
 int main ()
 {
     createFile();
+    if (!Utils::copyFile("data.txt", "data-copy.txt"))
+        std::cerr << Utils::lastError().what() << std::endl;
     readFile();
 
     return 0;

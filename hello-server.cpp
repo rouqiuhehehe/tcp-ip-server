@@ -74,7 +74,9 @@ int main (int argc, char *argv[])
     if (client_socket == -1)
         failExit("accept error");
 
-    write(client_socket, message, sizeof(message));
+    for (const char & i : message)
+        write(client_socket, &i, 1);
+
     close(client_socket);
     close(server_socket);
 
