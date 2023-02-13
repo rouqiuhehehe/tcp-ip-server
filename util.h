@@ -32,32 +32,21 @@ private:
         int handle () { return _M_file.fd(); }
     };
 public:
+    enum class Endian
+    {
+        BIG_ENDIAN_,
+        LITTLE_ENDIAN_
+    };
     // 获取文件描述符
-    static int getFileDescriptor (std::ifstream &fs)
-    {
-        auto *buf = fs.rdbuf();
+    static inline int getFileDescriptor (std::ifstream &fs);
 
-        return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    }
-    static int getFileDescriptor (std::ofstream &fs)
-    {
-        auto *buf = fs.rdbuf();
-
-        return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    }
-    static int getFileDescriptor (std::fstream &fs)
-    {
-        auto *buf = fs.rdbuf();
-
-        return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    }
-    static inline void failExit (const std::string &str)
-    {
-        std::cerr << str << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    static bool copyFile (const std::string &filePath, const std::string &copyPath);
+    static inline int getFileDescriptor (std::ofstream &fs);
+    static inline int getFileDescriptor (std::fstream &fs);
+    static inline void failExit (const std::string &str);
+    static bool copyFile (const std::string &filePath,
+        const std::string &copyPath);
     static UtilsError lastError () { return error; }
+    static inline Endian getEndian ();
 
 private:
     static UtilsError error;
@@ -80,10 +69,42 @@ bool Utils::copyFile (const std::string &filePath, const std::string &copyPath)
         getline(file, context);
         copyFile << context;
     }
-    
+
     file.close();
     copyFile.close();
 
     return true;
+}
+Utils::Endian Utils::getEndian ()
+{
+    int i = 1;
+    char s = *(char *)&i;
+    if (s == 1)
+        return Utils::Endian::LITTLE_ENDIAN_;
+
+    return Utils::Endian::BIG_ENDIAN_;
+}
+int Utils::getFileDescriptor (std::ifstream &fs)
+{
+    auto *buf = fs.rdbuf();
+
+    return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+}
+int Utils::getFileDescriptor (std::ofstream &fs)
+{
+    auto *buf = fs.rdbuf();
+
+    return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+}
+int Utils::getFileDescriptor (std::fstream &fs)
+{
+    auto *buf = fs.rdbuf();
+
+    return static_cast<FileDescriptorHelper *>(buf)->handle(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+}
+void Utils::failExit (const std::string &str)
+{
+    std::cerr << str << std::endl;
+    exit(EXIT_FAILURE);
 }
 #endif //TEST__UTIL_H_
