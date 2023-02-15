@@ -3,6 +3,8 @@ project(test)
 
 set(CMAKE_CXX_STANDARD 17)
 #aux_source_directory(. DIR_SRCS)
+include_directories(lib)
+add_subdirectory(lib)
 
 #message("${DIR_SRCS} ---------")
 #add_executable(hello-server ${DIR_SRCS})
