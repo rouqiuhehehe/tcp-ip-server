@@ -26,13 +26,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afe0d91d-adea-4a3b-80a5-2f574dd1c2fc" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/echo-client.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/echo-server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-    </list>
+    <list default="true" id="afe0d91d-adea-4a3b-80a5-2f574dd1c2fc" name="变更" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -152,7 +146,7 @@
       <workItem from="1676030545641" duration="746000" />
       <workItem from="1676112482715" duration="7094000" />
       <workItem from="1676216168563" duration="3857000" />
-      <workItem from="1676280671647" duration="17515000" />
+      <workItem from="1676280671647" duration="18380000" />
     </task>
     <servers />
   </component>
