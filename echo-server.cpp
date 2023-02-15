@@ -89,6 +89,7 @@ int main (int argc, char **argv)
                     std::cout << str << std::endl;
                     write(clientSocket, str.c_str(), str.size());
                 }
+                close(clientSocket);
             }
         );
 
