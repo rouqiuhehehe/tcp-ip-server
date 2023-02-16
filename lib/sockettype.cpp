@@ -4,13 +4,16 @@
 
 #include "sockettype.h"
 
+#include <utility>
+
 class SocketType::SocketTypePrivate
 {
 public:
-    SocketTypePrivate (int p, const std::string h)
-        : port(p), host(h) {}
+    SocketTypePrivate (int p, std::string h)
+        : port(p), host(std::move(h)) {}
     int port;
     std::string host;
+    std::string message;
 };
 SocketType::SocketType (int port, const std::string &host)
     : d(new SocketTypePrivate(port, host)) {}
@@ -25,4 +28,12 @@ int SocketType::port () const
 std::string SocketType::host () const
 {
     return d->host;
+}
+std::string SocketType::message () const
+{
+    return d->message;
+}
+void SocketType::setMessage (const std::string &msg)
+{
+    d->message = msg;
 }

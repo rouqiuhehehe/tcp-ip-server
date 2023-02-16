@@ -14,12 +14,20 @@ class TcpServer : public TcpBase
 {
 public:
     typedef std::function <void (SocketType)> CallbackType;
+
     explicit TcpServer (const CallbackType &fn);
     ~TcpServer () override;
 
-    bool listen(int port);
+    void listenError (const TcpError::ErrorCallback &fn);
+    bool listen (int port);
     [[nodiscard]] inline TcpError lastError () const;
 
+private:
+    bool createEpoll ();
+    void waitEpoll (int epfd);
+    void createConnect (int epfd);
+    // 处理数据读取
+    void inHandler (int epfd, struct epoll_event *events);
 private:
     class TcpServerPrivate;
     TcpServerPrivate *d;

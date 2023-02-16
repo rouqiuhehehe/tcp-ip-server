@@ -8,11 +8,16 @@
 #include <string>
 class SocketType
 {
+    friend class TcpServer;
 public:
-    SocketType(int port, const std::string &host);
+    SocketType (int port, const std::string &host);
     ~SocketType ();
     [[nodiscard]] inline int port () const;
     [[nodiscard]] inline std::string host () const;
+    [[nodiscard]] inline std::string message () const;
+
+private:
+    inline void setMessage (const std::string &msg);
 
 private:
     class SocketTypePrivate;
