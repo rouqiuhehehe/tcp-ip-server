@@ -23,8 +23,9 @@ public:
     [[nodiscard]] inline TcpError lastError () const;
 
 private:
+    typedef std::pair<int, SocketType> SocketMapItem;
     bool createEpoll ();
-    void waitEpoll (int epfd);
+    [[noreturn]] void waitEpoll (int epfd);
     void createConnect (int epfd);
     // 处理数据读取
     void inHandler (int epfd, struct epoll_event *events);

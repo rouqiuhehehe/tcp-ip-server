@@ -15,9 +15,11 @@ public:
     [[nodiscard]] inline int port () const;
     [[nodiscard]] inline std::string host () const;
     [[nodiscard]] inline std::string message () const;
+    inline void write (const std::string &str);
 
 private:
     inline void setMessage (const std::string &msg);
+    inline void setEvent (int epfd, struct epoll_event *event);
 
 private:
     class SocketTypePrivate;

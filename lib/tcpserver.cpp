@@ -4,17 +4,16 @@
 
 #include "tcpserver.h"
 #include <sys/socket.h>
-#include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/epoll.h>
+#include <map>
 class TcpServer::TcpServerPrivate
 {
 public:
-    TcpServerPrivate (int port, const std::string &host)
-        : socket(port, host) {}
+    TcpServerPrivate (int port, const std::string &host) {}
 
     TcpServer::CallbackType callback;
-    SocketType socket;
+    std::map <int, SocketType> socketMap {};
     TcpError error {};
     struct epoll_event event {};
     static const int MAX_SIZE = 1024;
@@ -60,6 +59,8 @@ bool TcpServer::listen (int port)
         d->error.setError("listen error");
         return false;
     }
+
+    createEpoll();
 }
 TcpError TcpServer::lastError () const
 {
@@ -83,7 +84,7 @@ bool TcpServer::createEpoll ()
     epoll_ctl(epfd, EPOLL_CTL_ADD, fd(), &d->event);
     waitEpoll(epfd);
 }
-void TcpServer::waitEpoll (int epfd)
+[[noreturn]] void TcpServer::waitEpoll (int epfd)
 {
     // 一次最多处理20个连接
     const int MAX_SIZE = 20;
@@ -114,6 +115,7 @@ void TcpServer::createConnect (int epfd)
 
     char *ip = inet_ntoa(clientAddr.sin_addr);
     int port = ntohs(clientAddr.sin_port);
+    d->socketMap.insert(SocketMapItem(connectFd, SocketType(port, ip)));
 
     d->event.data.fd = connectFd;
     d->event.events = EPOLLIN | EPOLLET;
@@ -149,11 +151,13 @@ void TcpServer::inHandler (int epfd, struct epoll_event *event)
         // event->data.fd = -1;
     }
 
-    d->socket.setMessage(message);
-    if (d->callback)
-        d->callback(d->socket);
-
-    event->events = EPOLLOUT | EPOLLET;
-    //修改socketFd上要处理的事件为EPOLLOUT
-    epoll_ctl(epfd, EPOLL_CTL_MOD, socketFd, event);
+    const auto &pair = d->socketMap.find(socketFd);
+    if (pair != d->socketMap.end())
+    {
+        auto socket = pair->second;
+        socket.setMessage(message);
+        socket.setEvent(epfd, event);
+        if (d->callback)
+            d->callback(socket);
+    }
 }
